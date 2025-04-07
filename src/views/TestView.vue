@@ -1,6 +1,6 @@
 <template>
   <div>
-    <p>한은밥상 test test</p>
+    <p>한은밥상 test page</p>
   </div>
 </template>
 

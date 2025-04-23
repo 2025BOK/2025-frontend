@@ -8,7 +8,7 @@ import StoreEdit from '../views/StoreEdit.vue';
 import StoreList from '../views/StoreList.vue';
 import StoreRegister from '../views/StoreRegister.vue';
 import StoreDetail from '../views/StoreDetail.vue';
-
+import ReviewForm from '../views/ReviewForm.vue';
 Vue.use(VueRouter);
 
 export default new VueRouter({
@@ -51,6 +51,11 @@ export default new VueRouter({
             path: '/store/:storeNo',
             name: 'StoreDetail',
             component: StoreDetail
+        },
+        {
+            path: '/review/:storeNo/register',
+            name: 'ReviewForm',
+            component: ReviewForm 
         },
         {
             path: '*',

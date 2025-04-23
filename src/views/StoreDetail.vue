@@ -4,8 +4,11 @@
 <template>
     <v-container>
       <v-card class="pa-5" outlined>
-        <v-card-title class="headline">{{ store.storeNm }}
-            <v-btn color="green" small calss="mt-4" @click="goToReviewForm">가게 등록</v-btn>
+        <v-card-title>
+            <v-row align="center" justify="space-between" class="w-100">
+            <div class="headline">{{ store.storeNm }}</div>
+            <v-btn color="green" small class="mt-4" @click="goToReviewForm">리뷰 등록하기</v-btn>
+            </v-row>
         </v-card-title>
         <v-card-text>
           <p><strong>위치:</strong> {{ store.storeLoc }}</p>
@@ -62,8 +65,9 @@
           ]
         }
       },
-      goToreviewForm() { // 상세페이지만 리뷰 등록버튼이 보임
-      this.$router.push(`/store/${this.$route.params.storeNo}/review/register`)
+      goToReviewForm() { // 상세페이지만 리뷰 등록버튼이 보임
+      const storeNo = this.$route.params.storeNo
+      this.$router.push(`/review/${storeNo}/register`)
     }
     }
   }

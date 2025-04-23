@@ -4,7 +4,7 @@
       <v-card class="pa-5" outlined>
         <v-card-title>로그인</v-card-title>
         <v-card-text>
-          <v-text-field label="행번번" v-model="userNo" type="number" />
+          <v-text-field label="행번" v-model="userNo" type="number" />
           <v-text-field label="비밀번호" v-model="password" type="password" />
           <v-btn color="success" @click="login">로그인</v-btn>
         </v-card-text>

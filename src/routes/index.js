@@ -9,6 +9,10 @@ import StoreList from '../views/StoreList.vue';
 import StoreRegister from '../views/StoreRegister.vue';
 import StoreDetail from '../views/StoreDetail.vue';
 import ReviewForm from '../views/ReviewForm.vue';
+import HomeView from '../views/HomeView.vue';
+import ReviewDetail from '../views/ReviewDetail.vue';
+import ReviewList from '../views/ReviewList.vue';
+
 Vue.use(VueRouter);
 
 export default new VueRouter({
@@ -16,7 +20,12 @@ export default new VueRouter({
 	routes: [
         {
             path: '/',
-            redirect: '/test',
+            redirect: '/Home',
+        },
+        {
+            path: '/Home',
+            name: 'HomeView',
+            component: HomeView,
         },
         {
             path: '/test',
@@ -58,8 +67,22 @@ export default new VueRouter({
             component: ReviewForm 
         },
         {
+            path: '/review/:reviewNo',
+            name: 'ReviewDetail',
+            component: ReviewDetail,  // 리뷰 상세 컴포넌트
+            props: true
+        
+        },
+        {
+            path: '/review/:storeNo',
+            name: 'ReviewList',
+            component: ReviewList,  
+            props: true 
+          
+        },
+        {
             path: '*',
             component: NotFoundPage
-        },
+        }
     ],
 });

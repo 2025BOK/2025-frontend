@@ -1,4 +1,4 @@
-// 로그인 페이지
+<!-- 로그인 페이지 -->
 <template>
     <v-container>
       <v-card class="pa-5" outlined>
@@ -14,7 +14,6 @@
   
   <script>
   import axios from 'axios'
-  
   export default {
     data() {
       return {
@@ -25,12 +24,16 @@
     methods: {
       async login() {
         try {
-          const res = await axios.post('/user/login', {
+          await axios.post('http://localhost:8080/user/login',{
             userNo: this.userNo,
             password: this.password
-          })
-          alert('로그인 성공! 사용자 이름: ' + res.data.userNm)
-          // 이후 페이지로 라우팅
+          },);//{ withCredentials: true });
+
+          axios.defaults.withCredentials = true; // 홈화면으로 가든 , 새요청을 하든 쿠키가 무조건 같이 가도록 ( 로그인 세션 유지 )
+          
+          alert(`로그인 성공! `)
+          this.$router.push('/')    //  홈화면으로 이동
+
         } catch (err) {
           alert('로그인 실패')
         }

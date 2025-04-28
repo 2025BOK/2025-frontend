@@ -20,15 +20,17 @@ export default {
         return {
             userNo: '',
             userNm: '',
+            userCnt:'',
             password: ''
         }
     },
     methods: {
         async signup() {
             try {
-                await axios.post('/user/signup',{
+                await axios.post('http://localhost:8080/user/signup',{
                     userNo: this.userNo,
                     userNm: this.userNm,
+                    userCnt: 0,
                     password: this.password
                 })
                 alert('회원가입 성공하였습니다!')

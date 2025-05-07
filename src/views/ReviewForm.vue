@@ -2,19 +2,32 @@
 <template>
   <v-container>
     <v-card class="pa-5" outlined>
-      <v-card-title class="headline">리뷰 등록</v-card-title>
+      <v-card-title class="headline">리뷰 작성하기✍🏻</v-card-title>
       <v-card-text>
-        <v-textarea v-model="reviewDate" label="방문 날짜짜" auto-grow outlined />
-        <v-textarea v-model="reviewCtn" label="리뷰 내용" auto-grow outlined />
-        <v-text-field v-model.number="reviewRate" label="평점 (0.0 ~ 5.0)" type="number" step="0.1" min="0" max="5" />
-        <v-text-field v-model="reviewImg" label="이미지 url(선택)" />
+        <v-textarea v-model="reviewCtn" label="리뷰내용" auto-grow outlined />
+        <v-text-field
+          v-model="reviewRate"
+          label="리뷰평점 (0.0 ~ 5.0)"
+          type="text"
+          outlined
+          @input="validateReviewRate"
+        />
+        <v-file-input
+          v-model="reviewImg"
+          label="이미지 업로드 (선택)"
+          accept="image/*"
+          prepend-icon="mdi-camera"
+        />
+        <div v-if="reviewImg">
+          <img :src="previewUrl" alt="업로드한 이미지" style="max-width: 300px; margin-top: 20px;" />
+        </div>
+
         <v-select
           v-model="reviewType1"
           :items="type1Options"
-          label="음식 종류"
           item-text="text"
           item-value="value"
-          dense
+          label="음식 종류"
           outlined
         />
         <v-select
@@ -22,14 +35,15 @@
           :items="type2Options"
           item-text="text"
           item-value="value"
-          label="식당 분위기"
-          dense
+          label="분위기"
           outlined
         />
-        
-        <v-btn color="green" class="mt-4" @click="submitReview">
-          리뷰 등록하기
-        </v-btn>
+        <div class="btn-box">
+          <v-btn class="mt-4" @click="goBack">뒤로 가기</v-btn>
+          <v-btn color="#87CEEB" class="mt-4" @click="submitReview">
+            리뷰 등록하기
+          </v-btn>
+        </div>
       </v-card-text>
     </v-card>
   </v-container>
@@ -42,60 +56,113 @@ export default {
   name: 'ReviewForm',
   data() {
     return {
-      reviewDate:'',
-      reviewRate: '',
-      reviewCtn: '',
+      storeNo: 1,
+      userNo: 1,
+      reviewRate: 0.0,
       reviewImg: '',
-      reviewType1: null,
-      reviewType2: null,
+      reviewCtn: '',
+      reviewType1: '',
+      reviewType2: '',
+      previewUrl: null,
+
       type1Options: [
-        { text: '전체', value: null },
         { text: '한식', value: 1 },
-        { text: '일식', value: 2 },
-        { text: '중식', value: 3 },
+        { text: '중식', value: 2 },
+        { text: '일식', value: 3 },
         { text: '양식', value: 4 },
         { text: '동남아', value: 5 },
         { text: '분식', value: 6 }
       ],
       type2Options: [
-        { text: '전체', value: null },
-        { text: '격식 있는', value: 1 },
-        { text: '조용한', value: 2 },
-        { text: '인스타 감성', value: 3 },
-        { text: '단체 좌석 보유', value: 4 },
-        { text: '가성비', value: 5 }
-      ],
-      filter: {
-        reviewType1: null,
-        reviewType2: null
-      }
+        { text: '혼밥 가능', value: 1 },
+        { text: '트렌디함', value: 2 },
+        { text: '가성비', value: 3 },
+        { text: '단체 회식', value: 4 },
+        { text: '테이크아웃만 가능', value: 5 },
+        { text: '동네 밥집', value: 6 }
+      ]
     }
   },
   methods: {
-  async submitReview() {
-    const storeNo = this.$route.params.storeNo;
-    try {
-      const response = await axios.post(`http://localhost:8080/review/${storeNo}/register`, {
-        reviewDate: this.reviewDate,
+    async submitReview() {
+      if (!this.reviewCtn || !this.reviewType1 || !this.reviewType2) {
+        alert('모든 항목을 입력해주세요.');
+        return;
+      }
+
+      const formData = new FormData();
+
+      // ★ dto를 JSON → Blob으로 감싸서 추가
+      const dto = {
+        userNo: this.userNo,
         reviewRate: this.reviewRate,
         reviewCtn: this.reviewCtn,
         reviewType1: this.reviewType1,
         reviewType2: this.reviewType2,
-        reviewImg: this.reviewImg 
+      };
+
+      formData.append('dto', new Blob([JSON.stringify(dto)], { type: 'application/json' }));
+
+      // ★ reviewImg 추가
+      if (this.reviewImg) {
+        formData.append('reviewImg', this.reviewImg);
+      }
+
+      const storeNo = this.$route.params.storeNo || this.storeNo;
+
+      try {
+      
+        const response = await axios.post(
+          `http://localhost:8080/review/${storeNo}/register`,
+          formData,
+          {
+            headers: { 'Content-Type': 'multipart/form-data' }
+          }
+        );
+        console.log(response.data);
+        //const reviewNo = response.data; 
+        alert('리뷰가 등록되었습니다!');
+        this.$router.push(`/store`);
+      } catch (err) {
+        console.error(err);
+        alert('리뷰 등록에 실패했습니다!');
+      } finally {
+        this.loading = false;
+      }
+    },
+    goBack() {
+      window.history.back();
+    },
+    validateReviewRate() {
+      if (this.reviewRate !== '') {
+        let parsed = parseFloat(this.reviewRate);
+        if (!isNaN(parsed)) {
+          if (parsed < 0) parsed = 0;
+          if (parsed > 5) parsed = 5;
+          this.reviewRate = parsed;
         }
-      )
-
-      const reviewNo = response.data.reviewNo;  // 서버에서 리뷰 번호를 받는다
-      alert('리뷰 등록 성공!')
-
-      // 리뷰 상세 페이지로 리다이렉트
-      this.$router.push(`/review/${reviewNo}`) // 해당 리뷰의 상세 페이지로 이동
-
-    } catch (err) {
-      console.error('❌ 리뷰 등록 실패:', err.response?.data || err.message);
-      alert('리뷰 등록 실패!');
-    }
+      }
+    },
+  },
+  created() {
+    console.log("hello!");
+  },
+  watch: {
+    reviewImg(newFile) {
+      if (newFile) {
+        this.previewUrl = URL.createObjectURL(newFile);
+      } else {
+        this.previewUrl = null;
+      }
     }
   }
 }
 </script>
+
+<style>
+.btn-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+</style>

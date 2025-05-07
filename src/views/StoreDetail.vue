@@ -14,17 +14,6 @@
         <p><strong>식당 분위기 (reviewType2):</strong> {{ store.reviewType2 ?? '없음' }}</p>
 
         <v-divider class="my-4" />
-
-        <h3>리뷰 목록</h3>
-        <v-list dense v-if="store.reviewList?.length">
-          <v-list-item v-for="(review, index) in store.reviewList" :key="index">
-            <v-list-item-content>
-              <v-list-item-title>리뷰 #{{ review.reviewNo || index + 1 }}</v-list-item-title>
-              <v-list-item-subtitle>{{ review.content || '내용 없음' }}</v-list-item-subtitle>
-            </v-list-item-content>
-          </v-list-item>
-        </v-list>
-        <p v-else>등록된 리뷰가 없습니다.</p>
       </v-card-text>
     </v-card>
   </v-container>

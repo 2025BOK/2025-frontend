@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import TestView from '../views/TestView.vue';
 import NotFoundPage from '../views/NotFoundPage.vue';
 import SignupView from '../views/SignupView.vue';
 import LoginView from '../views/LoginView.vue';
@@ -9,27 +8,25 @@ import StoreList from '../views/StoreList.vue';
 import StoreRegister from '../views/StoreRegister.vue';
 import StoreDetail from '../views/StoreDetail.vue';
 import ReviewForm from '../views/ReviewForm.vue';
-import HomeView from '../views/HomeView.vue';
 import ReviewDetail from '../views/ReviewDetail.vue';
 import ReviewList from '../views/ReviewList.vue';
+import Homepage from '../views/Homepage.vue';
+
 
 Vue.use(VueRouter);
-
+// 라우터 설정정
 export default new VueRouter({
     mode: 'history',
 	routes: [
         {
             path: '/',
-            redirect: '/Home',
+            name: 'Homepage',
+            redirect: '/Home'
         },
         {
             path: '/Home',
-            name: 'HomeView',
-            component: HomeView,
-        },
-        {
-            path: '/test',
-            component: TestView,
+            name: 'Homepage',
+            component:Homepage
         },
         { 
             path: '/user/signup', 

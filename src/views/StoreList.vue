@@ -5,7 +5,14 @@
       <v-card-title>
         <span>가게 목록</span>
         <v-spacer />
-        <v-btn color="primary" small @click="goToRegister">
+        <v-btn
+          color="blue lighten-4"
+          class="ma-2"
+          rounded
+          elevation="4"
+          dark
+          @click="goToRegister"
+        >
           가게 등록
         </v-btn>
       </v-card-title>
@@ -29,8 +36,22 @@
             />
           </v-col>
           <v-col cols="12" sm="6" md="3">
-            <v-btn color="grey" small @click="searchStores">검색</v-btn>
-            <v-btn color="pink darken-1" small class="ml-2" dark @click="resetFilter">
+            <v-btn
+              color="grey lighten-4"
+              class="ma-1"
+              rounded
+              bold
+              depressed
+              @click="searchStores"
+            >검색</v-btn>
+            <v-btn
+              color="red accent-3"
+              class="ma-1"
+              bold
+              rounded
+              outlined
+              @click="resetFilter"
+            >
               초기화
             </v-btn>
           </v-col>
@@ -44,23 +65,37 @@
         class="elevation-1"
       >
         <template #item.actions="{ item }">
-          <v-btn color="green" small class="mr-2" @click="goToReview(item.storeNo)">리뷰 등록</v-btn>
-          <v-btn color="blue" small class="mr-2" @click="goEdit(item.storeNo)">
+          <v-btn
+            color="green lighten-4"
+            small
+            rounded
+            elevation="2"
+            class="mx-1"
+            @click="goToReview(item.storeNo)">
+            리뷰 등록 </v-btn>
+            <v-btn
+            color="amber lighten-4"
+            small
+            rounded
+            elevation="2"
+            class="mx-1"
+            @click="goEdit(item.storeNo)"
+          >
             수정
           </v-btn>
-          <v-btn color="red" small dark @click="confirmDelete(item.storeNo)">
+          <v-btn
+            color="red lighten-10"
+            small
+            dark
+            rounded
+            elevation="2"
+            class="mx-1"
+            @click="confirmDelete(item.storeNo)"
+          >
             삭제
           </v-btn>
         </template>
       </v-data-table>
-      <v-list two-line>
-        <v-list-item v-for="store in stores" :key="store.storeNo" @click="goDetail(store)">
-          <v-list-content>
-            <v-list-item-title>{{store.storeNm}}</v-list-item-title>
-            <v-list-item-subtitle>{{store.storeLoc}}</v-list-item-subtitle>
-          </v-list-content>
-        </v-list-item>
-      </v-list>
       <template v-if="stores.length === 0 && !loading">
         <v-card-text class="text-center py-4">
           등록된 가게가 없습니다.
@@ -133,12 +168,14 @@ export default {
           reviewType1: this.filter.reviewType1,
           reviewType2: this.filter.reviewType2
         })
+        console.log("yoda!")
+        console.log(res.data);
         this.stores = res.data
         //url 쿼리에도 반영
         this.$router.replace({ query: { ...this.filter } })
       } catch (err) {
         console.error('❌ 검색 실패:', err)
-        alert('검색 실패')
+        alert('검색된 가게가 없습니다')
       }
     },
     goToReview(storeNo) {
